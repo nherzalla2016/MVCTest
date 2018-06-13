@@ -1,0 +1,54 @@
+﻿
+@{
+    ViewBag.Title = "Contacts List";
+}
+
+@model List<MVCAssignment.Models.ContactsViewModels>
+
+<div class="col-md-12">
+
+</div> 
+<br />
+
+<div class="col-md-offset-10 col-md-2">
+    <p><span class="glyphicon glyphicon-plus"></span>@Html.ActionLink("Add Contact", "AddContact") </p>
+ </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Email Address</th>
+                <th scope="col">Birth Date</th>
+                <th scope="col">Number of Computers</th>
+                <th scope="col"></th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td>@Html.DisplayFor(model => item.Id)</td>
+                    <td>@Html.DisplayFor(model => item.FirstName)</td>
+                    <td>@Html.DisplayFor(model => item.LastName)</td>
+                    <td>@Html.DisplayFor(model => item.EmailAddress)</td>
+                    <td>@Html.DisplayFor(model => item.BirthDate)</td>
+                    <td>@Html.DisplayFor(model => item.NumberOfComupters)</td>
+                    <td>@Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "delete-link" })</td>
+
+
+
+                </tr>
+
+            }
+        </tbody>
+    </table>
+
+<div id="delete-dialog" title="Confirmation">
+    <p>Are you sure you want to delete this Brand?</p>
+</div>	
+
+
