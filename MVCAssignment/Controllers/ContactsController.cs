@@ -54,11 +54,12 @@ namespace MVCAssignment.Controllers
                 NumberOfComupters = sm.NumberOfComupters
             };
             _repo.Add(contact);
-            return View("Index");
+            return RedirectToAction("Index");
         }
         public ActionResult Delete(int Id)
         {
-            return RedirectToAction("Index", "Contacts");
+            _repo.Delete(Id);
+             return RedirectToAction("Index");//RedirectToRoutePermanent("Contacts");
         }
     }
 }
