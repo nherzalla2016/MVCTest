@@ -13,16 +13,32 @@ namespace MVCAssignment.Controllers
     {
         Repository.IRepository<Contacts> _repo;
         Repository.IRepository<Addresses> _addressRepo;
+        Repository.ISummaryRepository _summaryRepo;
         public ContactsController()
         {
             _repo = new Repository.GenericRepository<Contacts>();
             _addressRepo = new Repository.GenericRepository<Addresses>();
+            _summaryRepo = new SummaryRepository();
         }
         public ActionResult Index()
         {
            
             var contactsViewModelList= AllContacts();
             return View(contactsViewModelList);
+        }
+        public ActionResult Summary()
+        {
+            var summaryVM = new List<SummaryViewModel>();
+            var summaryResult = _summaryRepo.AddressSummary();
+            if(summaryResult.Any())
+            {
+                foreach(var item in summaryResult)
+                {
+                    summaryVM.Add(new SummaryViewModel { Address = item.Address, NumberOfContacts = item.NumberOfContacts });
+                }
+            }
+
+            return View(summaryVM);
         }
 
         public ActionResult Search(string search)
@@ -84,7 +100,7 @@ namespace MVCAssignment.Controllers
         [HttpPost]
         public ActionResult Update(ContactsViewModels sm)
         {
-            
+
             var contact = new Contacts
             {
                 Id = sm.Id,
@@ -93,7 +109,7 @@ namespace MVCAssignment.Controllers
                 NumberOfComupters = sm.NumberOfComupters,
                 FirstName = sm.FirstName,
                 LastName = sm.LastName,
-                Addresses = new Addresses { Id = sm.Address_Id }
+                 Address_Id = sm.Address_Id
             };
            
             _repo.Update(contact);
@@ -156,7 +172,8 @@ namespace MVCAssignment.Controllers
                 BirthDate = Convert.ToDateTime(sm.BirthDate),
                 EmailAddress = sm.EmailAddress,
                 NumberOfComupters = sm.NumberOfComupters,
-                Addresses = new Addresses {  Id = sm.Address_Id}
+                 Address_Id = sm.Address_Id
+               
             };
             _repo.Add(contact);
             return Json(new

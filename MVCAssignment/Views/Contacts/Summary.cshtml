@@ -1,0 +1,42 @@
+﻿
+@{
+    ViewBag.Title = "Summary";
+}
+
+<h2>Summary</h2>
+
+@model List<MVCAssignment.Models.SummaryViewModel>
+
+
+
+<div class="col-md-12">
+
+</div>
+<br />
+
+
+<table class="table">
+    <thead>
+        <tr>
+           
+            <th scope="col">Address</th>
+            <th scope="col">Number of Contacts</th>
+            
+
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+            {
+            <tr>
+
+                 <td>@Html.DisplayFor(model => item.Address)</td>
+                <td>@Html.DisplayFor(model => item.NumberOfContacts)</td>
+               
+
+            </tr>
+
+        }
+    </tbody>
+</table>

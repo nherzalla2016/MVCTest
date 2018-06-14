@@ -15,7 +15,7 @@ namespace Repository
        {
 
         }
-        public DbSet<Contacts> Blogs { get; set; }
-        public DbSet<Addresses> Posts { get; set; }
+        public DbSet<Contacts> Contacts { get; set; }
+        public DbSet<Addresses> Addresses { get; set; }
     }
 }

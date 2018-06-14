@@ -18,7 +18,9 @@ namespace Repository
         public string EmailAddress { get; set; }
         public DateTime BirthDate { get; set; }
         public int NumberOfComupters { get; set; }
-        public Addresses Addresses { get; set; }
-        
+      
+        [Column("Address_Id")]
+        public int Address_Id { get; set; }
+       
     }
 }

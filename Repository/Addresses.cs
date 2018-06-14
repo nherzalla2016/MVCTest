@@ -19,6 +19,6 @@ namespace Repository
         public string StateCode { get; set; }
         public string Zip { get; set; }
 
-        public virtual List<Contacts> Contacts { get; set; }
+      //  public virtual List<Contacts> Contacts { get; set; }
     }
 }
