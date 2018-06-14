@@ -18,26 +18,71 @@ namespace MVCAssignment.Controllers
         }
         public ActionResult Index()
         {
+           
+            var contactsViewModelList= AllContacts();
+            return View(contactsViewModelList);
+        }
+
+        public ActionResult Edit(int Id)
+        {
+           var contact =  _repo.GetById(Id);
+            var contactModel = new ContactsViewModels
+            {
+                BirthDate = contact.BirthDate.ToShortDateString(),
+                EmailAddress = contact.EmailAddress,
+                FirstName = contact.FirstName,
+                Id = contact.Id,
+                LastName = contact.LastName,
+                NumberOfComupters = contact.NumberOfComupters
+            };
+            return View(contactModel);
+        }
+        [HttpPost]
+        public ActionResult Update(ContactsViewModels sm)
+        {
+            var contact = new Contacts
+            {
+                Id = sm.Id,
+                EmailAddress = sm.EmailAddress,
+                BirthDate = Convert.ToDateTime(sm.BirthDate),
+                NumberOfComupters = sm.NumberOfComupters,
+                FirstName = sm.FirstName,
+                LastName = sm.LastName
+            };
+            _repo.Update(contact);
+
+
+            return Json(new
+            {
+                redirectUrl = Url.Action("Index", "Contacts"),
+                isRedirect = true
+            });
+           
+        }
+
+        private List<ContactsViewModels> AllContacts()
+        {
             var contactsViewModelList = new List<ContactsViewModels>();
             var contactsList = _repo.GetAll();
-            if(contactsList.Any())
+            if (contactsList.Any())
             {
-                foreach(var contact in contactsList)
+                foreach (var contact in contactsList)
                 {
                     contactsViewModelList.Add(new ContactsViewModels
                     {
-                         Id = contact.Id,
-                         FirstName= contact.FirstName,
-                         LastName=contact.LastName,
-                         EmailAddress=contact.EmailAddress,
-                         NumberOfComupters=contact.NumberOfComupters,
-                         BirthDate=contact.BirthDate.ToShortDateString()
-                         
+                        Id = contact.Id,
+                        FirstName = contact.FirstName,
+                        LastName = contact.LastName,
+                        EmailAddress = contact.EmailAddress,
+                        NumberOfComupters = contact.NumberOfComupters,
+                        BirthDate = contact.BirthDate.ToShortDateString()
+
                     });
                 }
             }
-            return View(contactsViewModelList);
+            return contactsViewModelList;
         }
+
         public ActionResult AddContact()
         {
             return View();
@@ -54,12 +99,20 @@ namespace MVCAssignment.Controllers
                 NumberOfComupters = sm.NumberOfComupters
             };
             _repo.Add(contact);
-            return RedirectToAction("Index");
+            return Json(new
+            {
+                redirectUrl = Url.Action("Index", "Contacts"),
+                isRedirect = true
+            });
         }
         public ActionResult Delete(int Id)
         {
             _repo.Delete(Id);
-             return RedirectToAction("Index");//RedirectToRoutePermanent("Contacts");
+            return Json(new
+            {
+                redirectUrl = Url.Action("Index", "Contacts"),
+                isRedirect = true
+            });
         }
     }
 }

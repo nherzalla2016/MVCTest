@@ -23,6 +23,8 @@
                 <th scope="col">Birth Date</th>
                 <th scope="col">Number of Computers</th>
                 <th scope="col"></th>
+                <th scope="col"></th>
+                
 
             </tr>
         </thead>
@@ -38,7 +40,7 @@
                     <td>@Html.DisplayFor(model => item.BirthDate)</td>
                     <td>@Html.DisplayFor(model => item.NumberOfComupters)</td>
                     <td>@Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "delete-link" })</td>
-
+                    <td> @Html.ActionLink("Edit", "Edit", new { id = item.Id })</td>
 
 
                 </tr>
