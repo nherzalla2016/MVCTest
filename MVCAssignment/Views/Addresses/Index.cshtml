@@ -1,7 +1,56 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Addresses List";
 }
 
-<h2>Index</h2>
+@model List<MVCAssignment.Models.AddressesViewModels>
+
+<div class="col-md-12">
+
+</div>
+<br />
+
+<div class="col-md-offset-10 col-md-2">
+    <p><span class="glyphicon glyphicon-plus"></span>@Html.ActionLink("Add Address", "AddAddress") </p>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Address Line 1 </th>
+            <th scope="col">Address Line 2 </th>
+            <th scope="col">City</th>
+            <th scope="col">StateCode</th>
+            <th scope="col">Zip</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+            {
+            <tr>
+
+                <td>@Html.DisplayFor(model => item.Id)</td>
+                <td>@Html.DisplayFor(model => item.AddressLine1)</td>
+                <td>@Html.DisplayFor(model => item.AddressLine2)</td>
+                <td>@Html.DisplayFor(model => item.City)</td>
+                <td>@Html.DisplayFor(model => item.StateCode)</td>
+                <td>@Html.DisplayFor(model => item.Zip)</td>
+                <td>@Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "delete-link" })</td>
+                <td> @Html.ActionLink("Edit", "Edit", new { id = item.Id })</td>
+
+
+            </tr>
+
+        }
+    </tbody>
+</table>
+
+<div id="delete-dialog" title="Confirmation">
+    <p>Are you sure you want to delete this Brand?</p>
+</div>
+
 

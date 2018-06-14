@@ -12,9 +12,11 @@ namespace MVCAssignment.Controllers
     public class ContactsController : Controller
     {
         Repository.IRepository<Contacts> _repo;
+        Repository.IRepository<Addresses> _addressRepo;
         public ContactsController()
         {
             _repo = new Repository.GenericRepository<Contacts>();
+            _addressRepo = new Repository.GenericRepository<Addresses>();
         }
         public ActionResult Index()
         {
@@ -23,9 +25,39 @@ namespace MVCAssignment.Controllers
             return View(contactsViewModelList);
         }
 
+        public ActionResult Search(string search)
+        {
+            var contactsViewModelList = new List<ContactsViewModels>();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                string querystr = search;
+                var contactsSearch = _repo.SearchFor(q => q.FirstName.Contains(querystr) || q.LastName.Contains(querystr));
+                if(contactsSearch.Any())
+                {
+                    foreach (var contact in contactsSearch)
+                    {
+                        contactsViewModelList.Add(new ContactsViewModels
+                        {
+                            Id = contact.Id,
+                            FirstName = contact.FirstName,
+                            LastName = contact.LastName,
+                            EmailAddress = contact.EmailAddress,
+                            NumberOfComupters = contact.NumberOfComupters,
+                            BirthDate = contact.BirthDate.ToShortDateString()
+
+                        });
+                    }
+                }
+            }
+            return View(contactsViewModelList);
+        }
         public ActionResult Edit(int Id)
         {
-           var contact =  _repo.GetById(Id);
+           
+
+
+            var contact =  _repo.GetById(Id);
             var contactModel = new ContactsViewModels
             {
                 BirthDate = contact.BirthDate.ToShortDateString(),
@@ -35,11 +67,24 @@ namespace MVCAssignment.Controllers
                 LastName = contact.LastName,
                 NumberOfComupters = contact.NumberOfComupters
             };
+
+
+            contactModel.Addresses = new Dictionary<int, string>();
+            var addresssList = _addressRepo.GetAll();
+            if (addresssList.Any())
+            {
+                foreach (var address in addresssList)
+                {
+                    contactModel.Addresses.Add(address.Id, address.AddressLine1 + " " + address.AddressLine2);
+                }
+
+            }
             return View(contactModel);
         }
         [HttpPost]
         public ActionResult Update(ContactsViewModels sm)
         {
+            
             var contact = new Contacts
             {
                 Id = sm.Id,
@@ -47,8 +92,10 @@ namespace MVCAssignment.Controllers
                 BirthDate = Convert.ToDateTime(sm.BirthDate),
                 NumberOfComupters = sm.NumberOfComupters,
                 FirstName = sm.FirstName,
-                LastName = sm.LastName
+                LastName = sm.LastName,
+                Addresses = new Addresses { Id = sm.Address_Id }
             };
+           
             _repo.Update(contact);
 
 
@@ -85,10 +132,22 @@ namespace MVCAssignment.Controllers
 
         public ActionResult AddContact()
         {
-            return View();
+            var contactViewModel = new ContactsViewModels();
+            contactViewModel.Addresses = new Dictionary<int, string>();
+            var addresssList = _addressRepo.GetAll();
+            if(addresssList.Any())
+            {
+                foreach(var address in addresssList)
+                {
+                    contactViewModel.Addresses.Add(address.Id, address.AddressLine1 + " " + address.AddressLine2);
+                }
+                
+            }
+            return View(contactViewModel);
         }
         public ActionResult Insert(ContactsViewModels sm)
         {
+
             var contact = new Contacts
             {
                 Id = sm.Id,
@@ -96,7 +155,8 @@ namespace MVCAssignment.Controllers
                 LastName = sm.LastName,
                 BirthDate = Convert.ToDateTime(sm.BirthDate),
                 EmailAddress = sm.EmailAddress,
-                NumberOfComupters = sm.NumberOfComupters
+                NumberOfComupters = sm.NumberOfComupters,
+                Addresses = new Addresses {  Id = sm.Address_Id}
             };
             _repo.Add(contact);
             return Json(new
